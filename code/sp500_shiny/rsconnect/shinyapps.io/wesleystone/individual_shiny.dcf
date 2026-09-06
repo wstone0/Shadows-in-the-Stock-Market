@@ -1,0 +1,12 @@
+name: individual_shiny
+title: individual_shiny
+username: wesleystone
+account: wesleystone
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15189059
+bundleId: 10758455
+url: https://wesleystone.shinyapps.io/individual_shiny/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,0 +1,12 @@
+name: aggregate_shiny
+title: aggregate_shiny
+username: wesleystone
+account: wesleystone
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15189223
+bundleId: 10758424
+url: https://wesleystone.shinyapps.io/aggregate_shiny/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,0 +1,5 @@
+subset,series,p_round,n
+adjustment applies,Close (as traded),0.0312596784749454,3167467
+adjustment applies,Adjusted close,0.020049459078816,3167467
+no adjustment,Close (as traded),0.0537334672968562,6702322
+no adjustment,Adjusted close,0.0537334672968562,6702322

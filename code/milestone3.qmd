@@ -1,0 +1,55 @@
+---
+title: "Milestone4"
+format: html
+editor: source
+---
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(here)
+```
+
+```{r}
+# Load the data
+dat <- read.csv("../data/All_Tickers_5_Year_Data.csv")
+```
+```{r}
+library(dplyr)
+
+dat_clean <- dat[ , colSums(is.na(dat))==0]
+```
+
+```{r}
+dat_pivot_longer<- pivot_longer(dat_clean, cols=2:35767, names_to="stock", values_to="values")
+```
+
+```{r}
+dat_separated <- dat_pivot_longer %>%
+  mutate(stock_name = str_extract(stock, "[^_]+"), bench_mark = str_extract(stock, "(?<=_).*") )
+```
+
+```{r}
+dat_wider <- dat_separated %>%
+  pivot_wider(names_from=bench_mark, values_from=values)
+```
+
+```{r}
+dat_rounded_high <- mutate(dat_wider, rounded=cut(High - floor(High), seq(0, 1, by=0.1), right=FALSE))
+
+
+high_ranges <- dat_rounded_high %>% count(rounded) %>% filter(!is.na(rounded))
+
+high_ranges_percent <- high_ranges %>%
+  mutate(percent_ranges = n/sum(n))
+```
+
+```{r}
+dat_rounded_low <- mutate(dat_wider, rounded=cut(Low - floor(Low), seq(0, 1, by=0.1), right=FALSE))
+
+
+low_ranges <- dat_rounded_low %>% count(rounded) %>% filter(!is.na(rounded))
+
+low_ranges_percent <- low_ranges %>%
+  mutate(percent_ranges = n/sum(n))
+```

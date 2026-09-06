@@ -1,0 +1,251 @@
+---
+title: "Anchoring Bias in the Stock Market"
+author: "Alan Schulz-Diaz and Wesley Stone"
+date: "12-17-2024"
+format: html
+runtime: shiny
+editor: visual
+---
+
+```{r setup, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(shiny)
+library(plotly)
+library(tidyquant)
+```
+
+```{r data, message=FALSE, echo=FALSE}
+finished_data <- read.csv("../data/finished_data.csv")
+```
+
+
+## Driving Question
+
+We came to this project with one simple question: are there cognitive biases that impact the daily highs and lows in which stocks are traded? In theory, stock prices should be random, as traders' valuations depend on a multitude of factors that are impossible to predict.
+
+However, humans execute transactions and we wondered if there is a tendency for daily high and low prices to cluster around rounded numbers. At first, we thought the best approach would be to investigate the nominal value of a stock. But quickly, we realized stocks' tendency to trade in values less than 5 dollars was simply because there are more small companies listed in the stock market than larger ones. Then, we came up with the idea of investigating if the last two decimal places of a stock, essentially, its ending cent value, clustered around rounded numbers.
+
+We extracted data from yahoo finance from 2019 to 2024 and plotted graphs to depict what were the most common ending cent values in which daily lows (Figure 1) and daily highs (Figure 2) encountered.
+
+
+```{r, echo=FALSE}
+# Define the metric you want to visualize
+chosen_metric <- "High"  # Replace with the metric of your choice
+
+# Create the label dynamically based on the metric
+label <- str_c(chosen_metric, "_cat")
+
+# Generate the bar plot
+high <- finished_data %>%
+  group_by(!!sym(label)) %>%
+  count() %>%
+  mutate(cent_price = as.numeric(!!sym(label)) / 100) %>%  # Convert to cent price
+  ggplot() +
+  geom_bar(aes(x = cent_price, y = n), stat = "identity", fill="darkgreen") +
+  labs(
+    title = paste("Daily highs, last two digits (cent price): 2019-2024"),
+    x = "Cent price",
+    y = "Number of Highs"
+  ) +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::comma) +  # Ensure y-axis values are regular counts
+  theme_minimal()
+
+
+# Display the plot
+print(high)
+```
+
+```{r, echo=FALSE}
+# Define the metric you want to visualize
+chosen_metric <- "Low"  # Replace with the metric of your choice
+
+# Create the label dynamically based on the metric
+label <- str_c(chosen_metric, "_cat")
+
+# Generate the bar plot
+low <- finished_data %>%
+  group_by(!!sym(label)) %>%
+  count() %>%
+  mutate(cent_price = as.numeric(!!sym(label)) / 100) %>%  # Convert to cent price
+  ggplot() +
+  geom_bar(aes(x = cent_price, y = n), stat = "identity", fill="darkred") +
+  labs(
+    title = paste("Daily Lows, last two digits (cent price): 2019-2024"),
+    x = "Cent price",
+    y = "Number of Lows"
+  ) +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::comma) +  # Ensure y-axis values are regular counts
+  theme_minimal()
+
+
+# Display the plot
+print(low)
+```
+
+
+## Analysis
+
+These graphs present compelling evidence of anchoring bias. There are high peaks at 0 and 50 cents, as well as other round numbers such as multiples of 10 and 25.
+
+If we look closer, another insight we get from these graphs is highs and lows both peak at rounded cent values, but they behave slightly different on how they approach to that peak. When approaching a daily high, traders keep buying until it reaches the 0 value, with lots of trades ending at 99 cents. Instead, when approaching a daily low, traders will buy at .01 and stop buying at .99. This behavior further reinforces the trend, as these barriers act as as support and tension price points.
+
+However, one of the concerns we had was that low volume stocks were driving this behavior. For example, some stocks can be as pricey as $200,000, and those stocks are usually traded at rounded numbers and by very few individuals. So we created two interactive shiny apps to allow users to view the trends of their choice.
+
+First, we divided all stocks into five categories according to their median volume of daily trades. The user can explore the company size, metric and date of their choice.
+
+
+```{r, echo=FALSE, message=FALSE}
+finished_data$Date <- as.Date(finished_data$Date, format = "%Y-%m-%d")  # Ensure the format is "yyyy-mm-dd"
+
+finished_data$Date <- as.Date(finished_data$Date, format = "%Y-%m-%d")  # Ensure the format is "yyyy-mm-dd"
+
+finished_data$volume_range <- factor(finished_data$volume_range, 
+                      levels = c("0-10 thousand", "10 thousand-100 thousand", "100 thousand-1 million", "1 million-10 million", "Above 10 million"))
+
+# Grab the input vectors we need
+metrics <- c("Open", "High", "Low", "Close", "Adj.Close")
+volume_range <- c("0-10 thousand", "10 thousand-100 thousand", "100 thousand-1 million", "1 million-10 million", "Above 10 million")
+
+# Filter to get the stock symbols we need
+sp500_symbols <- tq_index("SP500")$symbol %>%
+  intersect(finished_data$stock_name) %>% 
+  sort()
+
+# Extract trading days from the dataset
+trading_days <- finished_data %>%
+  pull(Date) %>% # Assuming the 'Date' column is already renamed and in Date class
+  unique() %>%
+  sort()
+```
+
+```{r shiny, message=FALSE, echo=FALSE}
+# Define UI
+ui <- fluidPage(
+ 
+  # Application title
+  titlePanel("Aggregate by Trade Volume"),
+ 
+  # Dropdowns to enable user input
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("volume_range",
+                  "Volume Range:",
+                  choices = unique(finished_data$volume_range),
+                  selected = unique(finished_data$volume_range)[1]),
+      selectInput("metrics",
+                  "Metric:",
+                  choices = metrics),
+      dateRangeInput("date_range",
+                     "Date Range:",
+                     start = min(finished_data$Date),
+                     end = max(finished_data$Date),
+                     format = "yyyy-mm-dd",
+                     min = min(finished_data$Date),
+                     max = max(finished_data$Date),
+                     separator = " to ")
+    ),
+   
+    # Show a plot of the generated distribution
+    mainPanel(
+      plotlyOutput("barPlot")
+    )
+  )
+)
+
+# Define server logic required to draw line graph
+server <- function(input, output) {
+ 
+  output$barPlot <- renderPlotly({
+    label <- str_c(input$metrics, "_cat") # Dynamic column reference
+   
+    # Filter data based on stock name and date range
+    p <- finished_data %>%
+      filter(volume_range == input$volume_range,
+             Date >= input$date_range[1] & Date <= input$date_range[2]) %>% # Filter by date range
+      group_by(!!sym(label)) %>%
+      count() %>%
+      mutate({{label}} := as.numeric(!!sym(label))/100) %>% # This weird syntax is necessary because R treats the dynamic label as a string, rather than a column name
+      ggplot() +
+      geom_bar(aes(x = !!sym(label), y = n), stat = "identity") +
+      labs(title = "", x = "Cent Price", y = str_c("Recorded ", input$metrics, "s")) + # Dynamic axis labeling
+      theme_minimal()
+   
+    ggplotly(p)
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+
+
+Whatever volume you look at, the trend generally maintains. People like rounded numbers and particularly .00 and .50.
+
+The second shiny is for individual stocks. To keep the dropdown manageable, we limited the options to stocks from the S&P 500, minus the seven companies that did not appear in our dataset.
+
+
+```{r shiny2, message=FALSE, echo=FALSE}
+# Define UI
+ui <- fluidPage(
+ 
+  # Application title
+  titlePanel("Individual Stocks"),
+ 
+  # Dropdowns to enable user input
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("stock_names",
+                  "Stock:",
+                  choices = sp500_symbols),
+      selectInput("metrics",
+                  "Metric:",
+                  choices = metrics),
+      dateRangeInput("date_range",
+                     "Date Range:",
+                     start = min(finished_data$Date),
+                     end = max(finished_data$Date),
+                     format = "yyyy-mm-dd",
+                     min = min(finished_data$Date),
+                     max = max(finished_data$Date),
+                     separator = " to ")
+    ),
+   
+    # Show a plot of the generated distribution
+    mainPanel(
+      plotlyOutput("barPlot")
+    )
+  )
+)
+
+# Define server logic required to draw line graph
+server <- function(input, output) {
+ 
+  output$barPlot <- renderPlotly({
+    label <- str_c(input$metrics, "_cat") # Dynamic column reference
+   
+    # Filter data based on stock name and date range
+    p <- finished_data %>%
+      filter(stock_name == input$stock_names,
+             Date >= input$date_range[1] & Date <= input$date_range[2]) %>% # Filter by date range
+      group_by(!!sym(label)) %>%
+      count() %>%
+      mutate({{label}} := as.numeric(!!sym(label))/100) %>% # This weird syntax is necessary because R treats the dynamic label as a string, rather than a column name
+      ggplot() +
+      geom_bar(aes(x = !!sym(label), y = n), stat = "identity") +
+      labs(title = "", x = "Cent Price", y = str_c("Recorded ", input$metrics, "s")) + # Dynamic axis labeling
+      theme_minimal()
+   
+    ggplotly(p)
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+```
+
+
+Thanks for checking out our project! We hope you found it as interesting as we did.
+

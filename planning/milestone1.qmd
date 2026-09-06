@@ -1,0 +1,90 @@
+---
+title: "Milestone 1"
+format: 
+  html:
+    embed-resources: true
+
+---
+
+Names: Write down names of all team members Wesley Stone, Alan Schulz
+
+## Project Topic: Briefly describe your project topic/scope in one phrase/sentence.
+
+We will be investigating anchoring bias in the stock market. This is when people attach meaning to certain arbitrary numerical thresholds (anchors), so for instance you might notice unusual behavior when a stock hits \$100 for the first time.
+
+## Questions: Describe 2-3 broad questions that you wish to explore within this topic. (Not all of them might be able to be investigated with the data source you find for this Milestone---that's fine.)
+
+Is there significant anchoring bias in the stock market? If so, does it appear in certain types of stocks? Does bias appear based on different buyers (eg. individuals being more susceptible than big organizations?)?
+
+## Data: Find one data source, and read that data into R.
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+stonks1 <- read_csv("../data/HistoricalData_1727474190073.csv")
+stonks2 <- read_csv("../data/HistoricalData_1727474206036.csv")
+stonks3 <- read_csv("../data/HistoricalData_1727474221394.csv")
+stonks4 <- read_csv("../data/HistoricalData_1727474246245.csv")
+stonks5 <- read_csv("../data/HistoricalData_1727474945219.csv")
+stonks6 <- read_csv("../data/HistoricalData_1727474957879.csv")
+stonks7 <- read_csv("../data/HistoricalData_1727474288120.csv")
+stonks8 <- read_csv("../data/HistoricalData_1727474300447.csv")
+stonks9 <- read_csv("../data/HistoricalData_1727474311890.csv")
+stonks10 <- read_csv("../data/HistoricalData_1727474323497.csv")
+```
+
+```{r}
+stonks1 <- stonks1 %>% 
+  mutate(name = "Apple")
+stonks2 <- stonks2 %>% 
+  mutate(name = "Starbucks")
+stonks3 <- stonks3 %>% 
+  mutate(name = "Microsoft")
+stonks4 <- stonks4 %>% 
+  mutate(name = "Cisco")
+stonks5 <- stonks5 %>% 
+  mutate(name = "Qualcomm")
+stonks6 <- stonks6 %>% 
+  mutate(name = "Meta")
+stonks7 <- stonks7 %>% 
+  mutate(name = "Amazon")
+stonks8 <- stonks8 %>% 
+  mutate(name = "Tesla")
+stonks9 <- stonks9 %>% 
+  mutate(name = "AMD")
+stonks10 <- stonks10 %>% 
+  mutate(name = "Netflix")
+```
+
+```{r}
+combineddata <- rbind(stonks1, stonks2, stonks3, stonks4, stonks5, stonks6, stonks7, stonks8, stonks9, stonks10)
+```
+
+## Data Context: Thoroughly describe the data context (who, what, when, where, why, and how? questions related to the dataset).
+
+This is historical price data from Nasdaq for 10 popular stocks from the past 5 years. Though 10 stocks will not be enough for our complete analysis (and 5 years is likely too short), it's a good place to start.
+
+## Data Codebook: Write up a data codebook. That is, describe the type and meaning of the variables in your dataset. Group your variables into categories (e.g., demographic variables, neighborhood variables). If you have a lot of variables, it may not be necessary/feasible to describe every variable individually. Rather, you can describe groups of similar variables.
+
+Basic: Date: the date name: the name of the company
+
+Context: Volume: how many shares were traded that day
+
+Price: Close/last: the stock price at the close of trading that day Open: the price at the opening of trading that day High: the highest price the stock reached that day Low: the lowest price the stock reached that day
+
+## Plan: Based on the data context write-up and your codebook, describe which of your 2-3 broad questions can be addressed with your dataset and how. Write a plan for addressing these questions. Make sure that the steps in this plan are reasonable to complete in about 2.5 weeks for Milestone 2. You will receive feedback on this plan and will be expected to integrate this feedback for Milestone 2.
+
+We will do some initial analysis of this data around potential anchor points, probably starting with \$100. We can plot it all out to see when points are reached, and then go down into the data to see what the actual movement was on those days. The more large-scale analysis of different types of stock will have to wait until we figure out how to incorporate more stocks more efficiently than one at a time, which will be the other major goal before the next milestone.
+
+5.  In a `Milestone2.qmd` file, complete the steps in your plan from Milestone 1 (the plan with feedback from the instructional team).
+
+```{r}
+
+```
+
+```{r}
+sessionInfo()
+```
+

@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Wesley Stone">
+<meta name="dcterms.date" content="2026-09-06">
+
+<title>Shadows in the Stock Market</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="stock_analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="stock_analysis_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="stock_analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="stock_analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="stock_analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="stock_analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="stock_analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="stock_analysis_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="stock_analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="stock_analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="stock_analysis_files/libs/bootstrap/bootstrap-8a894fcc3cb5e37eb5bf30def131be2f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#original-findings" id="toc-original-findings" class="nav-link active" data-scroll-target="#original-findings">1. Original findings</a></li>
+  <li><a href="#the-literature" id="toc-the-literature" class="nav-link" data-scroll-target="#the-literature">2. The literature</a></li>
+  <li><a href="#updated-analysis" id="toc-updated-analysis" class="nav-link" data-scroll-target="#updated-analysis">3. Updated analysis</a>
+  <ul class="collapse">
+  <li><a href="#does-the-measure-work-at-all" id="toc-does-the-measure-work-at-all" class="nav-link" data-scroll-target="#does-the-measure-work-at-all">3.1 Does the measure work at all?</a></li>
+  <li><a href="#the-benchmark-we-should-have-used" id="toc-the-benchmark-we-should-have-used" class="nav-link" data-scroll-target="#the-benchmark-we-should-have-used">3.2 The benchmark we should have used</a></li>
+  <li><a href="#the-shadow-law" id="toc-the-shadow-law" class="nav-link" data-scroll-target="#the-shadow-law">3.3 The shadow law</a></li>
+  <li><a href="#potential-confounds" id="toc-potential-confounds" class="nav-link" data-scroll-target="#potential-confounds">3.4 Potential confounds</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">3.5 Limitations</a></li>
+  </ul></li>
+  <li><a href="#conclusion-and-next-steps" id="toc-conclusion-and-next-steps" class="nav-link" data-scroll-target="#conclusion-and-next-steps">4. Conclusion and next steps</a>
+  <ul class="collapse">
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future work</a></li>
+  </ul></li>
+  <li><a href="#reproducing-this" id="toc-reproducing-this" class="nav-link" data-scroll-target="#reproducing-this">Reproducing this</a>
+  <ul class="collapse">
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Shadows in the Stock Market</h1>
+<p class="subtitle lead">How resting limit orders shape daily highs and lows</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Wesley Stone </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 6, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The original project was written in December 2024 with Alan Schulz Diaz for a statistics course. Section 1 reports that work as it stood. Sections 2+ are a 2026 revision, and they are mine alone.</p>
+</div>
+</div>
+</div>
+<section id="original-findings" class="level1">
+<h1>1. Original findings</h1>
+<p>My partner and I came to this project with one simple question: do cognitive biases show up in the daily highs and lows at which stocks trade? In theory prices should be unpredictable. A trader’s valuation depends on more moving parts than anyone can enumerate. But humans execute the transactions, and we wondered whether the prices they stop at are quietly non-random.</p>
+<p>The first idea was to look at the nominal price level. That went nowhere fast. Stocks bunch below $5 simply because there are more small companies than large ones, which is a fact about the listing universe and not about anybody’s head. So we changed the unit of analysis to something the company’s size cannot explain, the cent value. Whether a stock’s daily high ends in <code>.00</code> or <code>.37</code>, we thought, says much more about individual investors than its market cap.</p>
+<p>We pulled daily OHLC data for over 10,000 stocks and nearly 10M stock-days from Yahoo Finance and counted the ending cent value of each day’s high and each day’s low.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>The panel, as originally assembled.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Measure</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Stock-days</td>
+<td style="text-align: left;">9,869,789</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Distinct tickers</td>
+<td style="text-align: left;">10,070</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Date range</td>
+<td style="text-align: left;">2019-10-17 to 2024-10-14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Days where high equals low</td>
+<td style="text-align: left;">5.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Days with range under $0.20</td>
+<td style="text-align: left;">31.1%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-original" class="quarto-float quarto-figure quarto-figure-center anchored" width="1280">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-original-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="stock_analysis_files/figure-html/fig-original-1.png" id="fig-original" class="img-fluid figure-img" width="1280">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-original-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The spikes are unmistakable. Highs and lows both pile up at <code>.00</code> and <code>.50</code>, with smaller peaks at every multiple of ten and at the quarters. A high is more than three times as likely to end in <code>.00</code> as a uniform distribution over the hundred cent values would predict.</p>
+<p>Looking closer, we noticed something subtler that we mentioned almost in passing. Highs and lows peak at round values but they approach those peaks differently. Highs show an extra lump at <code>.99</code>, just below the round dollar. Lows show the mirror image at <code>.01</code>, just above it. We wrote that these looked like support and resistance points, and we moved on.</p>
+<p>We worried that thinly traded stocks were driving everything, so we built two Shiny apps to let a reader slice by volume and by individual ticker. The pattern held in every slice.</p>
+<ul>
+<li><a href="https://wesleystone.shinyapps.io/aggregate_shiny/">Aggregate view by volume category</a></li>
+<li><a href="https://wesleystone.shinyapps.io/individual_shiny/">Individual S&amp;P 500 stocks</a></li>
+</ul>
+<p>We concluded that this was evidence of anchoring bias, and handed it in.</p>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What we left on the table
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We were really asking two questions at once, and only built the design for one of them.</p>
+<ol type="1">
+<li><strong>Do stock prices cluster on round cent values?</strong> The charts above answer this convincingly, and Section 3.1 shows the measurement is sound.</li>
+<li><strong>Do daily highs and lows cluster more than an ordinary price does?</strong> This is the question we thought we were answering, and a uniform benchmark cannot answer it. Prices cluster on round numbers all the time, so “more than uniform” and “more than a normal price” are different claims.</li>
+</ol>
+<p>Answering the second one needs a control series: prices from the same stocks on the same days that are not extremes. As it happens, we had two sitting unused in the same data file. We also spotted the <code>.99</code>/<code>.01</code> asymmetry, called it support and resistance, and never tested it.</p>
+<p>Section 3 supplies both the control and the symmetry test.</p>
+</div>
+</div>
+</section>
+<section id="the-literature" class="level1">
+<h1>2. The literature</h1>
+<p>Round-number clustering was news to us, but not the field. Osborne documented it all the way back in 1962; Niederhoffer studied clustering and reversal at daily highs and lows in 1965 and 1966. The canonical modern reference is Harris (1991), which established the ordering clearly visible in our analysis, integers cluster more than halves, halves more than quarters, and proposed the negotiation cost hypothesis: a coarser price grid makes bargaining cheaper, so traders converge on one. Christie and Schultz (1994) noticed Nasdaq market makers avoiding odd-eighth quotes and triggered a Department of Justice antitrust investigation, which is the kind of impact most academics can only dream of. After the SEC forced exchanges to switch to decimal pricing partly as a result of this, Ikenberry and Weston (2008) found that clustering reappeared on nickels and dimes, which they read as evidence for a cognitive attraction story rather than a purely mechanical one.</p>
+<p>So the spikes in Section 1 are a replication, not a finding. Everything in that literature is about where prices land, with the exception of Osler (2003), which used actual foreign exchange order data to show that take-profit orders cluster at round numbers while stop-losses cluster just beyond them; a claim about what happens in the immediate neighbourhood of a magnet, not at the magnet itself. That turns out to be what our second chart was showing all along.</p>
+</section>
+<section id="updated-analysis" class="level1">
+<h1>3. Updated analysis</h1>
+<section id="does-the-measure-work-at-all" class="level2">
+<h2 class="anchored" data-anchor-id="does-the-measure-work-at-all">3.1 Does the measure work at all?</h2>
+<p>Before testing anything, a sanity check on the instrument. Yahoo Finance returns both a raw close and an adjusted close. Adjustment multiplies the price by a factor reflecting splits and dividends, which is not a round number. If my digit extraction is measuring something real about the traded price grid, then adjustment should destroy it, driving the distribution to uniform. If instead the spikes are an artifact of how I parse decimal strings, they will survive adjustment untouched.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-placebo" class="quarto-float quarto-figure quarto-figure-center anchored" width="1280">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-placebo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="stock_analysis_files/figure-html/fig-placebo-1.png" id="fig-placebo" class="img-fluid figure-img" width="1280">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-placebo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-placebo" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-placebo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<caption>Uniform expectation is 2.00%. Adjustment lands on it almost exactly.</caption>
+<colgroup>
+<col style="width: 27%">
+<col style="width: 25%">
+<col style="width: 31%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Subset</th>
+<th style="text-align: left;">Series</th>
+<th style="text-align: left;">P(cent is .00 or .50)</th>
+<th style="text-align: left;">Stock-days</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">adjustment applies</td>
+<td style="text-align: left;">Close (as traded)</td>
+<td style="text-align: left;">3.13%</td>
+<td style="text-align: left;">3,167,467</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">adjustment applies</td>
+<td style="text-align: left;">Adjusted close</td>
+<td style="text-align: left;">2.00%</td>
+<td style="text-align: left;">3,167,467</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">no adjustment</td>
+<td style="text-align: left;">Close (as traded)</td>
+<td style="text-align: left;">5.37%</td>
+<td style="text-align: left;">6,702,322</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">no adjustment</td>
+<td style="text-align: left;">Adjusted close</td>
+<td style="text-align: left;">5.37%</td>
+<td style="text-align: left;">6,702,322</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-placebo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Uniform expectation is 2.00%. Adjustment lands on it almost exactly.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>This is as clean as a placebo gets. On the third of stock-days where the adjustment factor actually bites, the adjusted close is round 2.00% of the time against a uniform expectation of exactly 2.00%. On the days where no adjustment applies, the two series are identical to the digit, as they must be. So the measurement is sound, and anyone who ran this analysis on adjusted closes would have found nothing at all, which is a live risk, since <code>yfinance</code> now defaults to returning adjusted prices.</p>
+</section>
+<section id="the-benchmark-we-should-have-used" class="level2">
+<h2 class="anchored" data-anchor-id="the-benchmark-we-should-have-used">3.2 The benchmark we should have used</h2>
+<p>The problem with the original design is that a daily high is an order statistic, the maximum over a session, rather than a random draw. If a price level attracts more trading time, it is mechanically more likely to be the day’s maximum, with no behavioral bias at the extreme whatsoever. Comparing it to a flat line tells you that prices cluster. That’s an interesting finding, but it doesn’t shed light on whether the extremes cluster more than prices in general.</p>
+<p>The panel already contains a better benchmark. Opens and closes are prices from the same stocks on the same days, but they are fixed-time observations rather than extremes. If highs and lows are special, they should be rounder than opens and closes. If they are not special, they should not be.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-conditional" class="quarto-float quarto-figure quarto-figure-center anchored" width="1280">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="stock_analysis_files/figure-html/fig-conditional-1.png" id="fig-conditional" class="img-fluid figure-img" width="1280">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>That is not the result we reported. The ordering is <strong>Open &gt; High ≈ Low &gt; Close</strong>, and it holds under every sample restriction. The gap widens when the sample is limited to days where the high and low are genuine extremes rather than a single print.</p>
+<p>The inferential version treats the stock as the unit of observation, which handles within-stock dependence without needing clustered standard errors across ten million rows:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-paired" class="quarto-float quarto-figure quarto-figure-center anchored" width="1280">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-paired-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="stock_analysis_files/figure-html/fig-paired-1.png" id="fig-paired" class="img-fluid figure-img" width="1280">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-paired-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Highs are reliably less round than opens, by 0.71 percentage points across all stock-days, widening to 1.29 points among liquid stocks on days with a real trading range. They are modestly rounder than closes. Neither comparison supports the claim that daily extremes are anchored to round numbers in a way that ordinary prices are not.</p>
+<p>So the two questions come apart cleanly.</p>
+<p><strong>Question one holds.</strong> Round-number clustering here is about three times the uniform rate, stable across every price bin and volume bucket, and confirmed by the placebo in 4.1. It also sits squarely in an established literature: Osborne documented it in 1962, and Harris (1991) worked out the full ordering of integers over halves over quarters. Replicating that on a fresh ten-million-row sample is a real result, and it’s the part of the original project that stands.</p>
+<p><strong>Question two gets an answer, and the answer is no.</strong> Once the control series is in place, daily extremes turn out not to be special. The clustering belongs to stock prices in general, not to highs and lows in particular. We reached for the more interesting of our two claims and stopped one comparison short of being able to evaluate it.</p>
+</section>
+<section id="the-shadow-law" class="level2">
+<h2 class="anchored" data-anchor-id="the-shadow-law">3.3 The shadow law</h2>
+<p>Here’s what we noticed and misread. We described it as a lump at <code>.99</code> for highs and <code>.01</code> for lows, as though those two digits were doing something. But there’s nothing special about <code>.99</code>; it just happens to sit one tick below a round dollar, and what matters is the round dollar.</p>
+<p>That reframing turns a curiosity about two cent values into a testable law. If highs stall one tick below wherever resting sell orders sit, then it should not just happen at <code>.00</code>. Every level that attracts orders should show excess mass one tick below it and a deficit one tick above, and the size of that imbalance should scale with how hard the level pulls. So define, for each cent value <span class="math inline">\(c\)</span>:</p>
+<p><span class="math display">\[\text{mass}(c) = P(\text{price ends on } c), \qquad \text{shadow}(c) = P(c-1) - P(c+1)\]</span></p>
+<p>and ask whether shadow is a function of mass. Restricting to the twenty multiples of five keeps any level’s neighbors from being magnets themselves.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-shadow" class="quarto-float quarto-figure quarto-figure-center anchored" width="1280">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shadow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="stock_analysis_files/figure-html/fig-shadow-1.png" id="fig-shadow" class="img-fluid figure-img" width="1280">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-shadow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The relationship is close to linear and it runs in opposite directions for the two extremes. <code>.00</code> pulls hardest and casts the deepest shadow; <code>.50</code> is next. The multiples of ten and the quarters line up behind them in order. Opens and closes are flat clouds around zero.</p>
+<p>Inference treats the stock as the unit: fit the slope of shadow on mass within each stock across the twenty levels, then average those slopes across stocks. That avoids leaning on twenty correlated level-level points.</p>
+<div class="cell">
+<div id="tbl-shadow" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-shadow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<caption>Slope of shadow on mass, fitted within each stock. The per-stock estimates are heavy-tailed, so the median is the more robust summary; a coin flip would put the last column at 50%.</caption>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 12%">
+<col style="width: 18%">
+<col style="width: 5%">
+<col style="width: 32%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Price type</th>
+<th style="text-align: left;">Mean slope</th>
+<th style="text-align: left;">Median slope</th>
+<th style="text-align: left;">95% CI</th>
+<th style="text-align: left;">t</th>
+<th style="text-align: left;">Stocks leaning the predicted way</th>
+<th style="text-align: left;">Stocks</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Open</td>
+<td style="text-align: left;">0.0027</td>
+<td style="text-align: left;">0.0009</td>
+<td style="text-align: left;">[-0.0023, 0.0077]</td>
+<td style="text-align: left;">1.1</td>
+<td style="text-align: left;">50.6%</td>
+<td style="text-align: left;">8,995</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">0.0748</td>
+<td style="text-align: left;">0.0637</td>
+<td style="text-align: left;">[0.0684, 0.0813]</td>
+<td style="text-align: left;">22.8</td>
+<td style="text-align: left;">64.1%</td>
+<td style="text-align: left;">8,995</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Low</td>
+<td style="text-align: left;">-0.0780</td>
+<td style="text-align: left;">-0.0670</td>
+<td style="text-align: left;">[-0.0840, -0.0719]</td>
+<td style="text-align: left;">-25.2</td>
+<td style="text-align: left;">63.4%</td>
+<td style="text-align: left;">8,995</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Close</td>
+<td style="text-align: left;">0.0037</td>
+<td style="text-align: left;">0.0016</td>
+<td style="text-align: left;">[-0.0024, 0.0097]</td>
+<td style="text-align: left;">1.2</td>
+<td style="text-align: left;">51.1%</td>
+<td style="text-align: left;">8,995</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-shadow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Slope of shadow on mass, fitted within each stock. The per-stock estimates are heavy-tailed, so the median is the more robust summary; a coin flip would put the last column at 50%.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Highs and lows are strongly signed and opposite. Opens and closes have confidence intervals straddling zero and sit at 50.6% and 51.1% in the last column. Coin flips, exactly what a series with no barrier should do.</p>
+<p>Zooming in on the strongest magnet shows what the law looks like at one level:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-neighbourhood" class="quarto-float quarto-figure quarto-figure-center anchored" width="1280">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-neighbourhood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="stock_analysis_files/figure-html/fig-neighbourhood-1.png" id="fig-neighbourhood" class="img-fluid figure-img" width="1280">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-neighbourhood-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Across all stock-days a daily high is 1.38 times more likely to end in <code>.99</code> than <code>.01</code>, and a daily low 1.40 times more likely to end in <code>.01</code> than <code>.99</code>. Restricting to days with a real trading range strengthens both to about 1.51 and 1.56. That is the right direction for a real mechanism, more room in the day’s range means more chances for a barrier to bind, and the wrong direction for most artifacts, which get diluted rather than sharpened when you restrict to cleaner observations.</p>
+<p>And this was actually quite visible in our original graphs. If you go back to the figure in Section 1 and look at the base of each spike rather than the spike itself, you’ll see that in the highs panel the bar immediately left of every peak stands slightly taller than the bar immediately right. In the lows panel it’s reversed. At the time, I thought this was a curious pattern but wasn’t quite sure what to make of it, and finals diverted my attention. I’m glad I found the time to come back and take another look.</p>
+<p>The mechanism at play is sell orders resting at a round dollar stop an advance one tick short, so the high prints just below. Buy orders resting there halt a decline one tick above, so the low prints just above. The stronger the level’s pull, the more orders sit on it, and the deeper the shadow, which is the slope in the table. Osler (2003) established this structure in foreign exchange with actual order book data; here is a duplication of her finding in US equities, recoverable from freely accessible data.</p>
+<p>It also explains why the benchmark series are null. Opens and closes are set by auctions, where a resting limit order is one input to a single clearing price rather than a wall that price has to climb through. Only a continuously traded extreme has to get past the book.</p>
+<section id="does-split-adjustment-drive-it" class="level3">
+<h3 class="anchored" data-anchor-id="does-split-adjustment-drive-it">Does split adjustment drive it?</h3>
+<p>One feature of the data needs checking before any of this can stand. The OHLC series returned by Yahoo Finance are back-adjusted for corporate actions. A 4:1 split divides every earlier price by four, which lands it on a quarter-cent grid, and the cleaning script then rounds it back into pennies. Apple’s high on the first day of the sample reads <code>59.0375</code>, representing the <code>$236.15</code> it actually traded at, divided by a split that would not happen for another ten months. On those rows the cent digit is a rounding of a price that never traded at that cent.</p>
+<p>Splits are not the only culprit. Spin-offs adjust the same way with untidier factors: 3M and IBM are both heavily affected and neither split during the window. Regular dividends, on the other hand, leave these columns alone. Coca-Cola, Johnson &amp; Johnson, Exxon, Procter &amp; Gamble and Chevron sit exactly on the penny grid for all 1,256 days.</p>
+<p>About 12% of stock-days carry an adjusted price. To be clear, that is not a 12% rate of corporate actions: one event back-adjusts a ticker’s entire prior history, so a single split in 2024 flags four years of that stock’s days. Nor is it rounding noise, as 97% of the affected prices sit more than a twentieth of a cent off the grid, and two thirds land within a hundredth of a cent of a simple fraction, which is exactly what dividing by a split ratio produces.</p>
+<p>So the whole thing is re-estimated on the clean subset: stock-days where all four of open, high, low and close sit exactly on the penny grid in the raw feed, before any rounding. That’s 77.6% of the panel and 7,793 stocks. Reading in this brobdingnagian dataset was irritating, but it’s certainly worth it to be able to do this kind of filtering without a second thought.</p>
+<div class="cell">
+<div id="tbl-clean" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-clean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<caption>Shadow slope on stock-days untouched by split adjustment, against the full-sample estimate.</caption>
+<colgroup>
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 14%">
+<col style="width: 19%">
+<col style="width: 6%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Price type</th>
+<th style="text-align: left;">Full sample</th>
+<th style="text-align: left;">Clean, mean</th>
+<th style="text-align: left;">Clean, median</th>
+<th style="text-align: left;">95% CI</th>
+<th style="text-align: left;">t</th>
+<th style="text-align: left;">Leaning the predicted way</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Open</td>
+<td style="text-align: left;">0.0027</td>
+<td style="text-align: left;">0.0072</td>
+<td style="text-align: left;">0.0006</td>
+<td style="text-align: left;">[0.0019, 0.0125]</td>
+<td style="text-align: left;">2.6</td>
+<td style="text-align: left;">50.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">0.0748</td>
+<td style="text-align: left;">0.0802</td>
+<td style="text-align: left;">0.0672</td>
+<td style="text-align: left;">[0.0731, 0.0873]</td>
+<td style="text-align: left;">22.1</td>
+<td style="text-align: left;">65.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Low</td>
+<td style="text-align: left;">-0.0780</td>
+<td style="text-align: left;">-0.0882</td>
+<td style="text-align: left;">-0.0741</td>
+<td style="text-align: left;">[-0.0948, -0.0815]</td>
+<td style="text-align: left;">-26.1</td>
+<td style="text-align: left;">65.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Close</td>
+<td style="text-align: left;">0.0037</td>
+<td style="text-align: left;">0.0026</td>
+<td style="text-align: left;">0.0011</td>
+<td style="text-align: left;">[-0.0047, 0.0098]</td>
+<td style="text-align: left;">0.7</td>
+<td style="text-align: left;">50.8%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-clean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Shadow slope on stock-days untouched by split adjustment, against the full-sample estimate.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>And to my relief, the effect is stronger on clean rows: from 0.075 to 0.080 for highs and from -0.078 to -0.088 for lows. This makes sense because rounding a quarter-cent price into a penny scrambles the digit, and scrambled digits pull an estimate toward zero rather than away from it.</p>
+<p>Something else that caught my eye was that on the clean subset the mean slope for opens becomes distinguishable from zero (t = 2.6), which is a higher t than closes get — yet fewer opens lean the predicted way than closes do (50.5% against 50.8%).</p>
+<p>The explanation is that the two statistics are measuring different things, and the per-stock slope estimates are badly skewed with only twenty points to fit from. Opens are skewed right (+2.3), which pulls the mean up while leaving the bulk of the distribution at zero. Closes are skewed hard left (−13.2), which drags their mean back toward zero even though marginally more than half of them sit just above it. Opens also have the tighter spread of the two, so the same nudge in the mean buys a much larger t.</p>
+<p>The median settles it. Opens sit at 0.0006 and closes at 0.0011, against 0.0672 for highs, which is two orders of magnitude apart. The typical benchmark stock has no shadow at all; a thin right tail of opens is doing the work in that t-statistic. Where the mean and the median disagree this sharply, the median is the statistic to believe.</p>
+</section>
+</section>
+<section id="potential-confounds" class="level2">
+<h2 class="anchored" data-anchor-id="potential-confounds">3.4 Potential confounds</h2>
+<p>We were right to worry that price level and thin trading were doing work. Both matter enormously for the level of clustering.</p>
+<div class="cell">
+<div id="tbl-confounds" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-confounds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<caption>P(cent is .00 or .50) by price level. Above $1,000 a share the cent grid is nearly irrelevant and two-thirds of prices are round.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Price bin</th>
+<th style="text-align: left;">Stock-days</th>
+<th style="text-align: left;">Open</th>
+<th style="text-align: left;">High</th>
+<th style="text-align: left;">Low</th>
+<th style="text-align: left;">Close</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">&lt;$1</td>
+<td style="text-align: left;">160,592</td>
+<td style="text-align: left;">3.0%</td>
+<td style="text-align: left;">3.3%</td>
+<td style="text-align: left;">2.1%</td>
+<td style="text-align: left;">3.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">$1-5</td>
+<td style="text-align: left;">959,090</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">3.5%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">3.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">$5-10</td>
+<td style="text-align: left;">990,692</td>
+<td style="text-align: left;">5.1%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">4.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">$10-25</td>
+<td style="text-align: left;">2,777,207</td>
+<td style="text-align: left;">5.1%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">4.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">$25-50</td>
+<td style="text-align: left;">2,596,240</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">3.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">$50-100</td>
+<td style="text-align: left;">1,410,185</td>
+<td style="text-align: left;">6.2%</td>
+<td style="text-align: left;">5.1%</td>
+<td style="text-align: left;">5.1%</td>
+<td style="text-align: left;">4.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">$100-250</td>
+<td style="text-align: left;">716,665</td>
+<td style="text-align: left;">9.9%</td>
+<td style="text-align: left;">7.9%</td>
+<td style="text-align: left;">7.9%</td>
+<td style="text-align: left;">6.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">$250-1k</td>
+<td style="text-align: left;">202,151</td>
+<td style="text-align: left;">21.3%</td>
+<td style="text-align: left;">18.3%</td>
+<td style="text-align: left;">18.5%</td>
+<td style="text-align: left;">16.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">&gt;$1k</td>
+<td style="text-align: left;">56,919</td>
+<td style="text-align: left;">68.7%</td>
+<td style="text-align: left;">66.6%</td>
+<td style="text-align: left;">66.9%</td>
+<td style="text-align: left;">65.3%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-confounds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: P(cent is .00 or .50) by price level. Above $1,000 a share the cent grid is nearly irrelevant and two-thirds of prices are round.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-volume" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-volume-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell table table-sm table-striped small">
+<caption>P(cent is .00 or .50) by liquidity, thinnest to most active. For highs and lows, clustering falls monotonically as volume rises.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Median daily volume</th>
+<th style="text-align: left;">Stock-days</th>
+<th style="text-align: left;">Open</th>
+<th style="text-align: left;">High</th>
+<th style="text-align: left;">Low</th>
+<th style="text-align: left;">Close</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0-10 thousand</td>
+<td style="text-align: left;">2,264,201</td>
+<td style="text-align: left;">8.9%</td>
+<td style="text-align: left;">8.7%</td>
+<td style="text-align: left;">8.7%</td>
+<td style="text-align: left;">8.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10 thousand-100 thousand</td>
+<td style="text-align: left;">2,864,302</td>
+<td style="text-align: left;">5.8%</td>
+<td style="text-align: left;">5.5%</td>
+<td style="text-align: left;">5.6%</td>
+<td style="text-align: left;">4.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">100 thousand-1 million</td>
+<td style="text-align: left;">3,143,346</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">3.6%</td>
+<td style="text-align: left;">3.6%</td>
+<td style="text-align: left;">3.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1 million-10 million</td>
+<td style="text-align: left;">1,457,210</td>
+<td style="text-align: left;">5.2%</td>
+<td style="text-align: left;">3.3%</td>
+<td style="text-align: left;">3.1%</td>
+<td style="text-align: left;">2.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Above 10 million</td>
+<td style="text-align: left;">140,730</td>
+<td style="text-align: left;">4.5%</td>
+<td style="text-align: left;">3.0%</td>
+<td style="text-align: left;">2.8%</td>
+<td style="text-align: left;">2.6%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-volume-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: P(cent is .00 or .50) by liquidity, thinnest to most active. For highs and lows, clustering falls monotonically as volume rises.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Clustering rises from about 4% in the $25–50 range to 67% above $1,000 a share, where a penny is economically meaningless. Liquidity runs the other way, and for highs and lows it runs cleanly: clustering falls from 8.7% in the thinnest bucket to 3.0% among stocks trading more than ten million shares a day, dropping at every step. We were right to worry that thin trading was impactful, so any future version of this has to stratify on both price and volume.</p>
+<p>What matters for the argument is that the ordering is stable inside every stratum. Opens stay rounder than highs and lows in every price bin and every volume bucket. The conclusion in 3.2 is not a composition effect.</p>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">3.5 Limitations</h2>
+<p><strong>The price feed is float32.</strong> Raw values carry about seven significant digits, so the error is roughly a hundredth of a cent at $100 a share and a tenth of a cent at $1,000. That is comfortably finer than a penny, so the cent digit is safe here. However, as I’ll get to in a moment, it might cause problems for a similar analysis in a couple of months.</p>
+<p><strong>Opens and closes are auction prints.</strong> They are the best benchmark available in daily data, but they are not neutral. Closing auctions carry index rebalancing and marking-the-close pressure, and opening auctions resolve overnight order imbalance. The ideal benchmark is each stock-day’s own intraday print distribution, but that comes from less accessible trade-level data.</p>
+<p><strong>None of this is tradable.</strong> The asymmetry is real and it is large in relative terms, but the quantity in play is one cent on a limit order, meaning its practical value is in execution rather than prediction. For example, a resting order at <code>$X.00</code> sits behind a much longer queue than one at <code>$X.01</code>. It was a lot easier to game an edge in increments of quarters in the ’90s than in pennies today; suffice to say that I don’t feel like I’m giving up a gold mine by making this analysis public. Prove me wrong, I suppose.</p>
+</section>
+</section>
+<section id="conclusion-and-next-steps" class="level1">
+<h1>4. Conclusion and next steps</h1>
+<p>My partner and I set out to ask whether round numbers show up in the prices people actually trade at, and whether daily highs and lows are drawn to them especially. With a control series and a proper test that the original design did not have, here is where that lands.</p>
+<p><strong>Round-number clustering is real, large, and well-established.</strong> Prices land on <code>.00</code> or <code>.50</code> roughly three times as often as chance predicts, the effect holds in every price bin and every volume bucket, and the adjusted-close placebo confirms the measurement is picking up the traded price grid rather than an artifact of how the digits are parsed. This is a clean replication on ten million stock-days of something Osborne noticed in 1962 and Harris formalized in 1991.</p>
+<p><strong>Daily extremes are not the driver.</strong> Once opens and closes are used as a control, highs and lows turn out to be slightly less round than an ordinary price from the same stock on the same day. The clustering belongs to stock prices generally.</p>
+<p><strong>What extremes actually do is stop one tick short.</strong> Every attracting cent value casts a shadow: excess mass one tick below it for highs, one tick above it for lows, scaling linearly with how hard that level pulls. The within-stock slope is 0.075 for highs and -0.078 for lows, against a slope statistically indistinguishable from zero for both benchmark series. That’s not anything special about the digits <code>.99</code> and <code>.01</code>, it’s a general property of how a continuously traded extreme meets a wall of resting orders, and it’s the price-level signature of the structure Osler (2003) found in foreign exchange order books.</p>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">Future work</h2>
+<p>The easiest update would be to switch opens and closes to the more neutral control of intraday print distribution. That would also make it possible to test the mechanism directly by measuring queue depth at a level and see whether it predicts that level’s shadow, instead of inferring the book from the prices it leaves behind.</p>
+<p>There is also a reason to return to this specific question with new data. On November 2 the minimum pricing increment drops from a penny to half a penny for NMS stocks whose time-weighted average quoted spread sits at or below $0.015, while everything else stays on pennies. Since the shadow is defined in ticks, a finer tick is a natural way to check the law still describes the data, and, more interestingly, what happens to the slope. If a half-penny grid splits the queue that used to sit at <code>.00</code> across two price points, each wall is thinner and easier to push through, and the slope should fall. If the same orders stay concentrated on the same salient price, it should hold. On the basis of this analysis, I’d put good money on the former.</p>
+<p>If I have time, I’ll write up a sequel making this prediction firm, and then testing it once enough data accrues. Until then, happy investing!</p>
+</section>
+</section>
+<section id="reproducing-this" class="level1">
+<h1>Reproducing this</h1>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 81%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">File</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">code/01_build_aggregates.R</td>
+<td style="text-align: left;">One pass over the 9.9M-row panel; writes the small summary tables this report reads.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">code/02_split_robustness.R</td>
+<td style="text-align: left;">Re-estimates the shadow law on stock-days untouched by corporate-action adjustment; produces the comparison in 3.3.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">data/aggregates/</td>
+<td style="text-align: left;">Those tables. Every figure and number above traces to one of them.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stock_analysis.qmd</td>
+<td style="text-align: left;">This document.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> code/01_build_aggregates.R</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> code/02_split_robustness.R</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render stock_analysis.qmd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Claude Code assisted with coding, formatting and analysis.</p>
+<ul>
+<li>Christie, W. and Schultz, P. (1994). Why do NASDAQ market makers avoid odd-eighth quotes? <em>Journal of Finance</em> 49(5).</li>
+<li>Harris, L. (1991). Stock price clustering and discreteness. <em>Review of Financial Studies</em> 4(3).</li>
+<li>Ikenberry, D. and Weston, J. (2008). Clustering in US stock prices after decimalisation. <em>European Financial Management</em> 14(1).</li>
+<li>Niederhoffer, V. and Osborne, M. F. M. (1966). Market making and reversal on the stock exchange. <em>Journal of the American Statistical Association</em> 61(316).</li>
+<li>Osborne, M. F. M. (1962). Periodic structure in the Brownian motion of stock prices. <em>Operations Research</em> 10(3).</li>
+<li>Osler, C. (2003). Currency orders and exchange rate dynamics. <em>Journal of Finance</em> 58(5).</li>
+<li>SEC Release 34-101070, <em>Regulation NMS: Minimum Pricing Increments, Access Fees, and Transparency of Better Priced Orders</em> (18 September 2024), and the exemptive order of 31 October 2025.</li>
+</ul>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
